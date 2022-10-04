@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:formulahack/common/color_values.dart';
 import 'package:formulahack/ui/intro/splash_screen.dart';
-import 'package:formulahack/ui/bottom_navigation/bot_nav.dart';
 import 'package:google_fonts/google_fonts.dart';
 
-void main() => runApp(Main());
+void main() => runApp(const Main());
 
 class Main extends StatelessWidget {
   const Main({Key? key}) : super(key: key);
@@ -13,8 +13,11 @@ class Main extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-          brightness: Brightness.dark, textTheme: GoogleFonts.exoTextTheme()),
-      home: SplashScreen(),
+        brightness: Brightness.dark,
+        scaffoldBackgroundColor: ColorValues.backgroundColor,
+        textTheme: GoogleFonts.exoTextTheme(),
+      ),
+      home: const SplashScreen(),
     );
   }
 }
