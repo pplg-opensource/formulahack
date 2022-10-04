@@ -1,6 +1,8 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:formulahack/ui/bottom_navigation/bot_nav.dart';
+import 'package:page_transition/page_transition.dart';
 
 class StartPage extends StatefulWidget {
   const StartPage({Key? key}) : super(key: key);
@@ -58,7 +60,8 @@ class _StartPageState extends State<StartPage> {
           AnimatedSwitcher(
             duration: Duration(seconds: 2),
             child: Image.asset(
-              width: double.infinity,
+              width: screenWidth,
+              height: screenHeight,
               key: ValueKey(_images[index]),
               _images[index],
               fit: BoxFit.cover,
@@ -69,11 +72,11 @@ class _StartPageState extends State<StartPage> {
               height: screenHeight,
               width: screenWidth,
               child: Align(
-                alignment: FractionalOffset.bottomCenter,
                 child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    SizedBox(height: 520),
+                    // SizedBox(height: 520),
                     Text("Welcome to Your",
                         style: TextStyle(color: Colors.white, fontSize: 28)),
                     SizedBox(height: 5),
@@ -92,7 +95,13 @@ class _StartPageState extends State<StartPage> {
                       padding: EdgeInsets.only(left: 35, right: 35),
                       child: Container(
                           child: ElevatedButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                Navigator.pushReplacement(
+                                    context,
+                                    PageTransition(
+                                        child: BottomNavbar(),
+                                        type: PageTransitionType.fade));
+                              },
                               style: ElevatedButton.styleFrom(
                                   shape: StadiumBorder(),
                                   primary: Color(0xFFFF1801)),
