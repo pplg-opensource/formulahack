@@ -36,6 +36,8 @@ dependencies:
   google_fonts:
   page_transition:
   font_awesome_flutter: ^10.2.1
+  http:
+  intl:
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +66,6 @@ flutter:
     - assets/countries/
     - assets/drivers/
     - assets/images_intro/
-    - assets/icons/
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
