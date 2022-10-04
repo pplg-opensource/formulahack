@@ -27,16 +27,20 @@ class _StartPageState extends State<StartPage> {
     super.initState();
     timer = Timer.periodic(Duration(milliseconds: 3500), (timer) {
       if (index < _images.length) {
-        setState(() {
-          index++;
-          print(index);
-        });
+        if (mounted) {
+          setState(() {
+            index++;
+            print(index);
+          });
+        }
       }
 
       if (index == _images.length) {
-        setState(() {
-          index = 0;
-        });
+        if (mounted) {
+          setState(() {
+            index = 0;
+          });
+        }
       }
     });
   }
