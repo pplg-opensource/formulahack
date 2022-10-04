@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:formulahack/ui/team_page/team_page.dart';
 import 'package:formulahack/ui/schedule/tab_bar.dart';
 
 class BottomNavbar extends StatefulWidget {
@@ -23,9 +24,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
     Center(
       child: Text("Drivers"),
     ),
-    Center(
-      child: Text("Teams"),
-    ),
+    TeamPage(),
     Center(
       child: Text("History"),
     ),
@@ -44,7 +43,7 @@ class _BottomNavbarState extends State<BottomNavbar> {
           currentIndex: currentindex,
           onTap: (index) => setState(
                 () => currentindex = index,
-          ),
+              ),
           items: [
             BottomNavigationBarItem(
               icon: Icon(Icons.home_outlined),
