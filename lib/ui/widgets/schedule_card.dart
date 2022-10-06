@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formulahack/ui/detail_race/detail_race.dart';
 
 import '../../common/color_values.dart';
 
@@ -20,83 +21,93 @@ class ScheduleCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      width: size.width,
-      height: size.height * 0.085,
-      margin: const EdgeInsets.symmetric(vertical: 10),
-      padding: const EdgeInsets.symmetric(horizontal: 15),
-      // color: Colors.white,
-      child: Row(
-        children: [
-          ClipOval(
-            child: Image.asset(
-              'assets/countries/${flag.toLowerCase()}.png',
-              width: 45,
+    return InkWell(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => DetailRacePage(round: round),
+          ),
+        );
+      },
+      child: Container(
+        width: size.width,
+        height: size.height * 0.085,
+        margin: const EdgeInsets.symmetric(vertical: 5),
+        padding: const EdgeInsets.symmetric(horizontal: 15),
+        // color: Colors.white,
+        child: Row(
+          children: [
+            ClipOval(
+              child: Image.asset(
+                'assets/countries/${flag.toLowerCase()}.png',
+                width: 45,
+              ),
             ),
-          ),
-          const SizedBox(
-            width: 10,
-          ),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Round $round',
-                style: const TextStyle(
-                  color: ColorValues.primaryColor,
-                  fontSize: 12,
+            const SizedBox(
+              width: 10,
+            ),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'Round $round',
+                  style: const TextStyle(
+                    color: ColorValues.primaryColor,
+                    fontSize: 12,
+                  ),
                 ),
-              ),
-              const SizedBox(
-                height: 2,
-              ),
-              isPast
-                  ? Text(
-                      country,
-                      style: const TextStyle(
-                        color: Colors.white,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w800,
-                      ),
-                    )
-                  : SizedBox(
-                      width: size.width / 1.3,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            country,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w800,
-                            ),
-                          ),
-                          Text(
-                            date,
-                            textAlign: TextAlign.end,
-                            style: const TextStyle(
-                              color: Colors.white,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-              const SizedBox(
-                height: 1,
-              ),
-              Text(
-                circuit,
-                style: const TextStyle(
-                  color: Colors.white70,
+                const SizedBox(
+                  height: 2,
                 ),
-              ),
-            ],
-          ),
-        ],
+                isPast
+                    ? Text(
+                        country,
+                        style: const TextStyle(
+                          color: Colors.white,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w800,
+                        ),
+                      )
+                    : SizedBox(
+                        width: size.width / 1.3,
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Text(
+                              country,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                              ),
+                            ),
+                            Text(
+                              date,
+                              textAlign: TextAlign.end,
+                              style: const TextStyle(
+                                color: Colors.white,
+                                fontSize: 12,
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                const SizedBox(
+                  height: 1,
+                ),
+                Text(
+                  circuit,
+                  style: const TextStyle(
+                    color: Colors.white70,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }

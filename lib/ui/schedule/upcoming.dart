@@ -24,9 +24,11 @@ class _UpcomingPageState extends State<UpcomingPage> {
             int.parse(DateFormat('MMdd').format(DateTime.now())))
         .toList();
 
-    setState(() {
-      _isLoaded = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoaded = true;
+      });
+    }
   }
 
   @override

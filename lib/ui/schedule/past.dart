@@ -24,9 +24,11 @@ class _PastPageState extends State<PastPage> {
             int.parse(DateFormat('MMdd').format(DateTime.now())))
         .toList();
 
-    setState(() {
-      _isLoaded = true;
-    });
+    if (mounted) {
+      setState(() {
+        _isLoaded = true;
+      });
+    }
   }
 
   @override

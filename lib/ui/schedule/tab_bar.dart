@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:formulahack/common/color_values.dart';
 import 'package:formulahack/ui/schedule/past.dart';
 import 'package:formulahack/ui/schedule/upcoming.dart';
+import 'package:google_fonts/google_fonts.dart';
 
 class TabBarPage extends StatefulWidget {
   const TabBarPage({Key? key}) : super(key: key);
@@ -12,7 +13,7 @@ class TabBarPage extends StatefulWidget {
 
 class _TabBarPageState extends State<TabBarPage>
     with SingleTickerProviderStateMixin {
-  late TabController _controller;
+  TabController? _controller;
 
   final List<Tab> _tab = [
     const Tab(
@@ -34,7 +35,7 @@ class _TabBarPageState extends State<TabBarPage>
   void dispose() {
     // TODO: implement dispose
     super.dispose();
-    _controller.dispose();
+    _controller!.dispose();
   }
 
   @override
@@ -52,6 +53,9 @@ class _TabBarPageState extends State<TabBarPage>
         ),
         bottom: TabBar(
           tabs: _tab,
+          labelStyle: GoogleFonts.exo(
+            fontWeight: FontWeight.w600,
+          ),
           controller: _controller,
           indicator: const UnderlineTabIndicator(
             borderSide: BorderSide(width: 2, color: ColorValues.primaryColor),
