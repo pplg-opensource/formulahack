@@ -16,6 +16,7 @@ class Main extends StatelessWidget {
         brightness: Brightness.dark,
         scaffoldBackgroundColor: ColorValues.backgroundColor,
         textTheme: GoogleFonts.exoTextTheme(),
+        accentColor: ColorValues.primaryColor,
       ),
       home: const SplashScreen(),
     );

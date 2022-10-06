@@ -1,8 +1,11 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
+import 'package:formulahack/ui/bottom_navigation/bot_nav.dart';
 import 'package:formulahack/ui/intro/start_page.dart';
 import 'package:page_transition/page_transition.dart';
+
+import '../detail_race/detail_race.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({Key? key}) : super(key: key);
