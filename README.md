@@ -19,7 +19,7 @@ You can access this link for the reference UI, and if you have some advice or yo
 
 For this project we're using Ergast API, this API was made by Javascript to serve images for drivers, teams, countries and circuits. You can read the API's documentation here
 
-[ergast.com](http://ergast.com/) <br>
+[ergast.com](https://ergast.com/mrd/) <br>
 [Postman Documentation](https://documenter.getpostman.com/view/11586746/SztEa7bL)
 
 ## 💾 Installation
