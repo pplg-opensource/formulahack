@@ -1,11 +1,11 @@
-class SpecificRaceModel {
+class QualifyResultModel {
   MRData? mRData;
 
-  SpecificRaceModel({this.mRData});
+  QualifyResultModel({this.mRData});
 
-  SpecificRaceModel.fromJson(Map<String, dynamic> json) {
+  QualifyResultModel.fromJson(Map<String, dynamic> json) {
     mRData =
-        json['MRData'] != null ? new MRData.fromJson(json['MRData']) : null;
+    json['MRData'] != null ? new MRData.fromJson(json['MRData']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -28,12 +28,12 @@ class MRData {
 
   MRData(
       {this.xmlns,
-      this.series,
-      this.url,
-      this.limit,
-      this.offset,
-      this.total,
-      this.raceTable});
+        this.series,
+        this.url,
+        this.limit,
+        this.offset,
+        this.total,
+        this.raceTable});
 
   MRData.fromJson(Map<String, dynamic> json) {
     xmlns = json['xmlns'];
@@ -99,25 +99,17 @@ class Races {
   Circuit? circuit;
   String? date;
   String? time;
-  FirstPractice? firstPractice;
-  FirstPractice? secondPractice;
-  FirstPractice? thirdPractice;
-  FirstPractice? qualifying;
-  FirstPractice? sprint;
+  List<QualifyingResults>? qualifyingResults;
 
   Races(
       {this.season,
-      this.round,
-      this.url,
-      this.raceName,
-      this.circuit,
-      this.date,
-      this.time,
-      this.firstPractice,
-      this.secondPractice,
-      this.thirdPractice,
-      this.qualifying,
-      this.sprint});
+        this.round,
+        this.url,
+        this.raceName,
+        this.circuit,
+        this.date,
+        this.time,
+        this.qualifyingResults});
 
   Races.fromJson(Map<String, dynamic> json) {
     season = json['season'];
@@ -125,24 +117,15 @@ class Races {
     url = json['url'];
     raceName = json['raceName'];
     circuit =
-        json['Circuit'] != null ? new Circuit.fromJson(json['Circuit']) : null;
+    json['Circuit'] != null ? new Circuit.fromJson(json['Circuit']) : null;
     date = json['date'];
     time = json['time'];
-    firstPractice = json['FirstPractice'] != null
-        ? new FirstPractice.fromJson(json['FirstPractice'])
-        : null;
-    secondPractice = json['SecondPractice'] != null
-        ? new FirstPractice.fromJson(json['SecondPractice'])
-        : null;
-    thirdPractice = json['ThirdPractice'] != null
-        ? new FirstPractice.fromJson(json['ThirdPractice'])
-        : null;
-    qualifying = json['Qualifying'] != null
-        ? new FirstPractice.fromJson(json['Qualifying'])
-        : null;
-    sprint = json['Sprint'] != null
-        ? new FirstPractice.fromJson(json['Sprint'])
-        : null;
+    if (json['QualifyingResults'] != null) {
+      qualifyingResults = <QualifyingResults>[];
+      json['QualifyingResults'].forEach((v) {
+        qualifyingResults!.add(new QualifyingResults.fromJson(v));
+      });
+    }
   }
 
   Map<String, dynamic> toJson() {
@@ -156,20 +139,9 @@ class Races {
     }
     data['date'] = this.date;
     data['time'] = this.time;
-    if (this.firstPractice != null) {
-      data['FirstPractice'] = this.firstPractice!.toJson();
-    }
-    if (this.secondPractice != null) {
-      data['SecondPractice'] = this.secondPractice!.toJson();
-    }
-    if (this.thirdPractice != null) {
-      data['ThirdPractice'] = this.thirdPractice!.toJson();
-    }
-    if (this.qualifying != null) {
-      data['Qualifying'] = this.qualifying!.toJson();
-    }
-    if (this.sprint != null) {
-      data['Sprint'] = this.sprint!.toJson();
+    if (this.qualifyingResults != null) {
+      data['QualifyingResults'] =
+          this.qualifyingResults!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -229,21 +201,120 @@ class Location {
   }
 }
 
-class FirstPractice {
-  String? date;
-  String? time;
+class QualifyingResults {
+  String? number;
+  String? position;
+  Driver? driver;
+  Constructor? constructor;
+  String? q1;
+  String? q2;
+  String? q3;
 
-  FirstPractice({this.date, this.time});
+  QualifyingResults(
+      {this.number,
+        this.position,
+        this.driver,
+        this.constructor,
+        this.q1,
+        this.q2,
+        this.q3});
 
-  FirstPractice.fromJson(Map<String, dynamic> json) {
-    date = json['date'];
-    time = json['time'];
+  QualifyingResults.fromJson(Map<String, dynamic> json) {
+    number = json['number'];
+    position = json['position'];
+    driver =
+    json['Driver'] != null ? new Driver.fromJson(json['Driver']) : null;
+    constructor = json['Constructor'] != null
+        ? new Constructor.fromJson(json['Constructor'])
+        : null;
+    q1 = json['Q1'];
+    q2 = json['Q2'];
+    q3 = json['Q3'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['date'] = this.date;
-    data['time'] = this.time;
+    data['number'] = this.number;
+    data['position'] = this.position;
+    if (this.driver != null) {
+      data['Driver'] = this.driver!.toJson();
+    }
+    if (this.constructor != null) {
+      data['Constructor'] = this.constructor!.toJson();
+    }
+    data['Q1'] = this.q1;
+    data['Q2'] = this.q2;
+    data['Q3'] = this.q3;
+    return data;
+  }
+}
+
+class Driver {
+  String? driverId;
+  String? permanentNumber;
+  String? code;
+  String? url;
+  String? givenName;
+  String? familyName;
+  String? dateOfBirth;
+  String? nationality;
+
+  Driver(
+      {this.driverId,
+        this.permanentNumber,
+        this.code,
+        this.url,
+        this.givenName,
+        this.familyName,
+        this.dateOfBirth,
+        this.nationality});
+
+  Driver.fromJson(Map<String, dynamic> json) {
+    driverId = json['driverId'];
+    permanentNumber = json['permanentNumber'];
+    code = json['code'];
+    url = json['url'];
+    givenName = json['givenName'];
+    familyName = json['familyName'];
+    dateOfBirth = json['dateOfBirth'];
+    nationality = json['nationality'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['driverId'] = this.driverId;
+    data['permanentNumber'] = this.permanentNumber;
+    data['code'] = this.code;
+    data['url'] = this.url;
+    data['givenName'] = this.givenName;
+    data['familyName'] = this.familyName;
+    data['dateOfBirth'] = this.dateOfBirth;
+    data['nationality'] = this.nationality;
+    return data;
+  }
+}
+
+class Constructor {
+  String? constructorId;
+  String? url;
+  String? name;
+  String? nationality;
+
+  Constructor({this.constructorId, this.url, this.name, this.nationality});
+
+  Constructor.fromJson(Map<String, dynamic> json) {
+    constructorId = json['constructorId'];
+    url = json['url'];
+    name = json['name'];
+    nationality = json['nationality'];
+  }
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = new Map<String, dynamic>();
+    data['constructorId'] = this.constructorId;
+    data['url'] = this.url;
+    data['name'] = this.name;
+    data['nationality'] = this.nationality;
     return data;
   }
 }
