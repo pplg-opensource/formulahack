@@ -1,83 +1,146 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+import '../../model/specific_race_model.dart';
+import '../../service/api_service.dart';
 
 class InformationRacePage extends StatefulWidget {
-  final String map;
-  final String fpDate, fpTime;
-  final String spDate, spTime;
-  final String tpDate, tpTime;
-  final String qualifyDate, qualifyTime;
-  final String raceDate, raceTime;
+  final String round;
 
-  const InformationRacePage(
-      {Key? key,
-      required this.map,
-      required this.fpDate,
-      required this.fpTime,
-      required this.spDate,
-      required this.spTime,
-      required this.tpDate,
-      required this.tpTime,
-      required this.qualifyDate,
-      required this.qualifyTime,
-      required this.raceDate,
-      required this.raceTime})
-      : super(key: key);
+  const InformationRacePage({Key? key, required this.round}) : super(key: key);
 
   @override
   State<InformationRacePage> createState() => _InformationRacePageState();
 }
 
 class _InformationRacePageState extends State<InformationRacePage> {
+  SpecificRaceModel? _model;
+  List<Races> _result = [];
+  bool _isLoad = false;
+
+  Future getApi() async {
+    _model = await ApiService().getSpecificRace(widget.round);
+    _result = _model!.mRData!.raceTable!.races!;
+
+    setState(() {
+      _isLoad = true;
+    });
+  }
+
+  String _dateFormat(String date) {
+    String result;
+
+    date.isEmpty
+        ? result = "empty"
+        : result = DateFormat("EEE, dd MMM yyyy")
+            .format(DateTime.tryParse(date) ?? DateTime.now());
+
+    return result;
+  }
+
+  String _timeFormat(String date) {
+    String result;
+
+    date == "null null" || date.isEmpty
+        ? result = "empty"
+        : result = DateFormat("h:mm a")
+            .format(DateTime.tryParse(date) ?? DateTime.now());
+
+    return result;
+  }
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    getApi();
+  }
+
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return Container(
-      width: size.width,
-      padding: EdgeInsets.all(20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Text(
-            "Map",
-            style: TextStyle(
-              color: Colors.white,
-              fontWeight: FontWeight.w600,
+    return _isLoad
+        ? SingleChildScrollView(
+            child: Container(
+              width: size.width,
+              padding: const EdgeInsets.all(20),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    "Map",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Align(
+                    alignment: Alignment.center,
+                    child: Image.asset(
+                      "assets/circuits/${_result[0].circuit!.circuitId}.png",
+                      width: size.width * 0.7,
+                    ),
+                  ),
+                  const SizedBox(
+                    height: 60,
+                  ),
+                  _timeRace(
+                    "First Practice",
+                    _dateFormat("${_result[0].firstPractice!.date}"),
+                    _timeFormat(
+                        "${_result[0].firstPractice!.date} ${_result[0].firstPractice!.time}"),
+                  ),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  _timeRace(
+                      "Second Practice",
+                      _dateFormat("${_result[0].secondPractice!.date}"),
+                      _timeFormat(
+                          "${_result[0].secondPractice!.date} ${_result[0].secondPractice!.time}")),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  _timeRace(
+                      "Third Practice",
+                      _dateFormat(_result[0].thirdPractice?.date ?? ''),
+                      _timeFormat(
+                          "${_result[0].thirdPractice?.date} ${_result[0].thirdPractice?.time}")),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  _timeRace(
+                      "Qualifying",
+                      _dateFormat("${_result[0].firstPractice!.date}"),
+                      _timeFormat(
+                          "${_result[0].firstPractice!.date} ${_result[0].firstPractice!.time}")),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  _timeRace(
+                      "Sprint",
+                      _dateFormat(_result[0].sprint?.date ?? ''),
+                      _timeFormat(
+                          "${_result[0].sprint?.date} ${_result[0].sprint?.time}")),
+                  const SizedBox(
+                    height: 15,
+                  ),
+                  _timeRace(
+                      "Race",
+                      _dateFormat("${_result[0].firstPractice!.date}"),
+                      _timeFormat(
+                          "${_result[0].firstPractice!.date} ${_result[0].firstPractice!.time}")),
+                ],
+              ),
             ),
-          ),
-          SizedBox(
-            height: 20,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Image.asset(
-              "assets/circuits/${widget.map}.png",
-              width: size.width * 0.7,
-            ),
-          ),
-          SizedBox(
-            height: 60,
-          ),
-          _timeRace("First Practice", widget.fpDate, widget.fpTime),
-          SizedBox(
-            height: 15,
-          ),
-          _timeRace("Second Practice", widget.spDate, widget.spTime),
-          SizedBox(
-            height: 15,
-          ),
-          _timeRace("Third Practice", widget.tpDate, widget.tpTime),
-          SizedBox(
-            height: 15,
-          ),
-          _timeRace("Third Practice", widget.qualifyDate, widget.qualifyTime),
-          SizedBox(
-            height: 15,
-          ),
-          _timeRace("Race", widget.raceDate, widget.raceTime),
-        ],
-      ),
-    );
+          )
+        : const Center(
+            child: CircularProgressIndicator(),
+          );
   }
 
   Widget _timeRace(String title, String date, String clock) {
@@ -91,11 +154,11 @@ class _InformationRacePageState extends State<InformationRacePage> {
             fontWeight: FontWeight.w600,
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Text(
           "$date\n$clock",
           textAlign: TextAlign.end,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.white,
             fontSize: 14,
             fontWeight: FontWeight.w700,

@@ -1,141 +1,205 @@
 import 'package:flutter/material.dart';
-import 'package:formulahack/model/race_result_model.dart';
-import 'package:formulahack/service/api_service.dart';
+import 'package:formulahack/ui/detail_race/result/qualify_result.dart';
+import 'package:formulahack/ui/detail_race/result/race_result.dart';
+import 'package:formulahack/ui/detail_race/result/sprint_result.dart';
 
-class ResultRacePage extends StatefulWidget {
+import '../../common/color_values.dart';
+
+class ResultPage extends StatefulWidget {
   final String round;
 
-  const ResultRacePage({Key? key, required this.round}) : super(key: key);
+  const ResultPage({Key? key, required this.round}) : super(key: key);
 
   @override
-  State<ResultRacePage> createState() => _ResultRacePageState();
+  State<ResultPage> createState() => _ResultPageState();
 }
 
-class _ResultRacePageState extends State<ResultRacePage> {
-  RaceResultModel? _results;
-  bool _isLoad = false;
-
-  Future getApi() async {
-    _results = await ApiService().getRaceResult(widget.round);
-    print("round : " + _results!.mRData!.raceTable!.season!);
-    setState(() {
-      _isLoad = true;
-    });
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-    super.initState();
-    getApi();
-  }
+class _ResultPageState extends State<ResultPage> {
+  String title = "Race";
+  int page = 1;
 
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
 
-    return _isLoad
-        ? Container(
-            width: size.width,
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Container(
-                    margin: EdgeInsets.only(left: 20),
-                    child: InkWell(
-                      onTap: () {},
-                      child: Row(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Text(
-                            "Race",
-                            style: TextStyle(
-                              color: Colors.white.withOpacity(0.9),
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          Icon(Icons.arrow_drop_down),
-                        ],
-                      ),
-                    ),
-                  ),
-                  ListView.builder(
-                    shrinkWrap: true,
-                    padding: EdgeInsets.fromLTRB(20, 20, 20, 0),
-                    physics: NeverScrollableScrollPhysics(),
-                    itemCount:
-                        _results?.mRData?.raceTable?.races?[0].results?.length,
-                    itemBuilder: (_, index) {
-                      var result = _results
-                          ?.mRData?.raceTable?.races?[0].results?[index];
+    switch (page) {
+      case 1:
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _dialog(title),
+              RaceResultPage(round: widget.round),
+            ],
+          ),
+        );
+      case 2:
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _dialog(title),
+              QualifyResultPage(round: widget.round),
+            ],
+          ),
+        );
+      case 3:
+        return SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              _dialog(title),
+              SprintResultPage(round: widget.round),
+            ],
+          ),
+        );
+      default:
+        return Container(
+          child: const Center(
+            child: Text("Error"),
+          ),
+        );
+    }
+  }
 
-                      var driver = result!.driver;
-                      var constructor = result.constructor!;
-
-                      return Container(
-                        width: size.width,
-                        margin: EdgeInsets.symmetric(vertical: 5),
-                        child: Row(
-                          children: [
-                            Text(
-                              result.position!,
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            ClipOval(
-                              child: Image.asset(
-                                'assets/drivers/${driver!.driverId}.png',
-                                width: 45,
-                              ),
-                            ),
-                            SizedBox(
-                              width: 10,
-                            ),
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "${driver.givenName} ${driver.familyName}",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                Text(
-                                  constructor.name!,
-                                  style: TextStyle(
-                                    color: Colors.white.withOpacity(0.7),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            Spacer(),
-                            Text(
-                              result.time?.time ?? "DNF",
-                              textAlign: TextAlign.end,
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 14,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ],
-                        ),
-                      );
-                    },
-                  ),
-                ],
+  Widget _dialog(String title) {
+    return Container(
+      margin: const EdgeInsets.only(left: 20),
+      child: InkWell(
+        onTap: () {
+          showDialog(context: context, builder: (context) => _raceTypeDialog());
+        },
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                color: Colors.white.withOpacity(0.9),
+                fontWeight: FontWeight.w600,
               ),
             ),
-          )
-        : const Center(
-            child: CircularProgressIndicator(),
-          );
+            const Icon(Icons.arrow_drop_down),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _raceTypeDialog() {
+    return Dialog(
+      backgroundColor: ColorValues.backgroundColor,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Container(
+        width: 300,
+        height: 300,
+        padding: const EdgeInsets.all(20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            const Text(
+              "Race types",
+              style: TextStyle(
+                color: Colors.white,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            const SizedBox(
+              height: 20,
+            ),
+            InkWell(
+              onTap: () {
+                int value = 1;
+
+                if (value != page) {
+                  setState(() {
+                    title = "Race";
+                    page = value;
+                  });
+                  if (!mounted) return;
+                  Navigator.pop(context);
+                } else {
+                  Navigator.of(context).pop(false);
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                child: const Text(
+                  "Race",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            InkWell(
+              onTap: () {
+                int value = 2;
+
+                if (value != page) {
+                  setState(() {
+                    title = "Qualification";
+                    page = value;
+                  });
+                  if (!mounted) return;
+                  Navigator.pop(context);
+                } else {
+                  Navigator.of(context).pop(false);
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                child: const Text(
+                  "Qualification",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+            const SizedBox(
+              height: 10,
+            ),
+            InkWell(
+              onTap: () {
+                int value = 3;
+
+                if (value != page) {
+                  setState(() {
+                    title = "Sprint";
+                    page = value;
+                  });
+                  if (!mounted) return;
+                  Navigator.pop(context);
+                } else {
+                  Navigator.of(context).pop(false);
+                }
+              },
+              child: Container(
+                width: double.infinity,
+                child: const Text(
+                  "Sprint",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 14,
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 }
