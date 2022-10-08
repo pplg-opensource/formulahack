@@ -6,6 +6,7 @@ import 'package:formulahack/model/specific_race_model.dart';
 import 'package:formulahack/service/api_service.dart';
 import 'package:formulahack/ui/detail_race/information.dart';
 import 'package:formulahack/ui/detail_race/result.dart';
+import 'package:formulahack/ui/detail_race/result/race_result.dart';
 import 'package:formulahack/ui/widgets/sliver_delegate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
@@ -25,7 +26,6 @@ class _DetailRacePageState extends State<DetailRacePage>
   TabController? _tabController;
 
   SpecificRaceModel? _specificRaceModel;
-  RaceResultModel? _raceResultModel;
 
   final double _height = 150;
   bool _lastStatus = true;
@@ -56,20 +56,9 @@ class _DetailRacePageState extends State<DetailRacePage>
 
   Future getApi() async {
     _specificRaceModel = await ApiService().getSpecificRace(widget.round);
-    _raceResultModel = await ApiService().getRaceResult(widget.round);
     setState(() {
       _isLoad = true;
     });
-  }
-
-  String _dateFormat(String date) {
-    String result = DateFormat("EEE, dd MMM yyyy").format(DateTime.parse(date));
-    return result;
-  }
-
-  String _timeFormat(String date, String clock) {
-    String result = DateFormat("h:mm a").format(DateTime.parse("$date $clock"));
-    return result;
   }
 
   @override
@@ -133,6 +122,7 @@ class _DetailRacePageState extends State<DetailRacePage>
                                     widget.round,
                                     style: TextStyle(
                                       color: ColorValues.primaryColor,
+                                      fontWeight: FontWeight.w600,
                                     ),
                                   ),
                                   SizedBox(
@@ -207,23 +197,9 @@ class _DetailRacePageState extends State<DetailRacePage>
                   controller: _tabController,
                   children: [
                     InformationRacePage(
-                      map: specific!.circuit!.circuitId!,
-                      fpDate: _dateFormat(specific.firstPractice!.date!),
-                      fpTime: _timeFormat(specific.firstPractice!.date!,
-                          specific.firstPractice!.time!),
-                      spDate: _dateFormat(specific.secondPractice!.date!),
-                      spTime: _timeFormat(specific.secondPractice!.date!,
-                          specific.secondPractice!.time!),
-                      tpDate: _dateFormat(specific.thirdPractice!.date!),
-                      tpTime: _timeFormat(specific.thirdPractice!.date!,
-                          specific.thirdPractice!.time!),
-                      qualifyDate: _dateFormat(specific.qualifying!.date!),
-                      qualifyTime: _timeFormat(specific.qualifying!.date!,
-                          specific.qualifying!.time!),
-                      raceDate: _dateFormat(specific.date!),
-                      raceTime: _timeFormat(specific.date!, specific.time!),
+                      round: widget.round,
                     ),
-                    ResultRacePage(
+                    ResultPage(
                       round: widget.round,
                     ),
                   ],
