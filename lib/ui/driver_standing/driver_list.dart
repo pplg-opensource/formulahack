@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:formulahack/common/color_values.dart';
-import 'package:formulahack/ui/widgets/driver_card.dart';
+import 'package:formulahack/ui/widgets/driver_widget/driver_card.dart';
 
 class DriverStanding extends StatefulWidget {
   const DriverStanding({Key? key}) : super(key: key);
@@ -39,7 +39,7 @@ class _DriverStandingState extends State<DriverStanding> {
               ),
             )),
         body: ListView.builder(
-            itemCount: 44,
+            itemCount: 28,
             itemBuilder: (BuildContext context, int index) {
               return DriverCard(number: (index + 1));
             }));
