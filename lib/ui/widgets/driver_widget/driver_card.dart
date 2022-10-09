@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:formulahack/ui/detail_driver/tab_bar.dart';
 
 class DriverCard extends StatefulWidget {
   int number;
+
   DriverCard({Key? key, required this.number}) : super(key: key);
 
   @override
@@ -9,7 +11,6 @@ class DriverCard extends StatefulWidget {
 }
 
 class _DriverCardState extends State<DriverCard> {
-
   bool _isLoad = false;
 
   @override
@@ -18,9 +19,12 @@ class _DriverCardState extends State<DriverCard> {
     var widthSize = MediaQuery.of(context).size.width;
 
     return GestureDetector(
-      onTap: () {},
+      onTap: () {
+        Navigator.push(
+            context, MaterialPageRoute(builder: (context) => DetailDriver()));
+      },
       child: Container(
-        margin: const EdgeInsets.symmetric(vertical: 5),
+        margin: const EdgeInsets.symmetric(vertical: 6),
         padding: const EdgeInsets.symmetric(horizontal: 15),
         height: 45,
         width: widthSize,
@@ -32,7 +36,8 @@ class _DriverCardState extends State<DriverCard> {
               children: [
                 Container(
                   width: 18,
-                  child: Text(widget.number.toString(), style: TextStyle(color: Colors.white, fontSize: 14)),
+                  child: Text(widget.number.toString(),
+                      style: TextStyle(color: Colors.white, fontSize: 14)),
                 ),
                 Container(
                   margin: const EdgeInsets.symmetric(horizontal: 15),
