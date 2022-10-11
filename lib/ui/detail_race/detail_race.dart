@@ -1,12 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:formulahack/common/color_values.dart';
-import 'package:formulahack/model/race_result_model.dart';
-import 'package:formulahack/model/schedule_model.dart';
 import 'package:formulahack/model/specific_race_model.dart';
 import 'package:formulahack/service/api_service.dart';
 import 'package:formulahack/ui/detail_race/information.dart';
 import 'package:formulahack/ui/detail_race/result.dart';
-import 'package:formulahack/ui/detail_race/result/race_result.dart';
 import 'package:formulahack/ui/widgets/sliver_delegate.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
