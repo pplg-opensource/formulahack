@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:formulahack/ui/detail_race/loading_information.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/specific_race_model.dart';
@@ -138,9 +139,7 @@ class _InformationRacePageState extends State<InformationRacePage> {
               ),
             ),
           )
-        : const Center(
-            child: CircularProgressIndicator(),
-          );
+        : const LoadingInformationRacePage();
   }
 
   Widget _timeRace(String title, String date, String clock) {

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formulahack/common/color_values.dart';
 import 'package:formulahack/ui/widgets/driver_widget/driver_card.dart';
+import 'package:formulahack/ui/widgets/driver_widget/loading_driver_card.dart';
 
 class DriverStanding extends StatefulWidget {
   const DriverStanding({Key? key}) : super(key: key);
@@ -10,6 +11,8 @@ class DriverStanding extends StatefulWidget {
 }
 
 class _DriverStandingState extends State<DriverStanding> {
+  bool _isLoad = true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -41,7 +44,9 @@ class _DriverStandingState extends State<DriverStanding> {
         body: ListView.builder(
             itemCount: 28,
             itemBuilder: (BuildContext context, int index) {
-              return DriverCard(number: (index + 1));
+              return _isLoad
+                  ? DriverCard(number: (index + 1))
+                  : const LoadingDriverCard();
             }));
   }
 }
