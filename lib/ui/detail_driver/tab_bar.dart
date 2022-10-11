@@ -8,7 +8,8 @@ import 'information_driver.dart';
 import 'result_driver.dart';
 
 class DetailDriver extends StatefulWidget {
-  const DetailDriver({Key? key}) : super(key: key);
+  final String driverId;
+  const DetailDriver({Key? key, required this.driverId}) : super(key: key);
 
   @override
   State<DetailDriver> createState() => _DetailDriverState();
@@ -134,7 +135,10 @@ class _DetailDriverState extends State<DetailDriver>
       },
       body: TabBarView(
         controller: _tabController,
-        children: const [InformationDriver(), ResultDriver()],
+        children: [
+          InformationDriver(),
+          ResultDriver(driverId: widget.driverId)
+        ],
       ),
     ));
   }

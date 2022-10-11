@@ -1,15 +1,20 @@
 import 'package:flutter/material.dart';
+import 'package:formulahack/service/api_service.dart';
 import 'package:formulahack/ui/widgets/driver_widget/alert_dialog.dart';
 import 'package:formulahack/ui/widgets/driver_widget/result_card.dart';
 
+import '../../model/driver_standing_result_model.dart';
+
 class ResultDriver extends StatefulWidget {
-  const ResultDriver({Key? key}) : super(key: key);
+  final String driverId;
+  const ResultDriver({Key? key, required this.driverId}) : super(key: key);
 
   @override
   State<ResultDriver> createState() => _ResultDriverState();
 }
 
 class _ResultDriverState extends State<ResultDriver> {
+
   @override
   Widget build(BuildContext context) {
     var widthScreen = MediaQuery.of(context).size.width;

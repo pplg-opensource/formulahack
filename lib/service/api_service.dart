@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:formulahack/model/driver_standing_model.dart';
 import 'package:formulahack/model/qualify_result_model.dart';
 import 'package:formulahack/model/race_result_model.dart';
 import 'package:formulahack/model/schedule_model.dart';
@@ -99,7 +100,24 @@ class ApiService {
       print('status code : ${response.statusCode}');
       if (response.statusCode == 200) {
         SprintResultModel model =
-        SprintResultModel.fromJson(jsonDecode(response.body));
+            SprintResultModel.fromJson(jsonDecode(response.body));
+        return model;
+      } else {
+        throw Exception("Failed to fetch data from API");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getDriverStanding() async {
+    String endPoint = "current/driverStandings.json";
+    final url = "$baseUrl$endPoint";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        DriverModel model = DriverModel.fromJson(jsonDecode(response.body));
         return model;
       } else {
         throw Exception("Failed to fetch data from API");
