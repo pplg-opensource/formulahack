@@ -39,6 +39,7 @@ dependencies:
   http:
   intl:
   expandable: ^5.0.1
+  shimmer: ^2.0.0
 
 dev_dependencies:
   flutter_test:

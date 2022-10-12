@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:formulahack/model/constructor_driver_model.dart';
+import 'package:formulahack/model/constructor_model.dart';
 import 'package:formulahack/model/driver_standing_model.dart';
 import 'package:formulahack/model/qualify_result_model.dart';
 import 'package:formulahack/model/race_result_model.dart';
@@ -101,6 +103,46 @@ class ApiService {
       if (response.statusCode == 200) {
         SprintResultModel model =
             SprintResultModel.fromJson(jsonDecode(response.body));
+        return model;
+      } else {
+        throw Exception("Failed to fetch data from API");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getTeam() async {
+    String endPoint = "current/constructorStandings.json";
+    final url = "$baseUrl$endPoint";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      print('status code : ${response.statusCode}');
+      if (response.statusCode == 200) {
+        ConstructorStandingModel model =
+            ConstructorStandingModel.fromJson(jsonDecode(response.body));
+        return model;
+      } else {
+        throw Exception("Failed to fetch data from API");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getTeamDriver(String constructor) async {
+    String endPoint = "current/constructors/$constructor/drivers.json";
+    final url = "$baseUrl$endPoint";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      print('status code : ${response.statusCode}');
+      if (response.statusCode == 200) {
+        ConstructorDriverModel model =
+            ConstructorDriverModel.fromJson(jsonDecode(response.body));
         return model;
       } else {
         throw Exception("Failed to fetch data from API");
