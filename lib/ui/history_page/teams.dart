@@ -13,9 +13,10 @@ class TeamsPage extends StatelessWidget {
             itemCount: 14,
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: (){},
+                onTap: () {},
                 child: Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 20,vertical: 7),
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 7),
                   child: SizedBox(
                     width: double.maxFinite,
                     child: Row(
@@ -27,7 +28,10 @@ class TeamsPage extends StatelessWidget {
                               padding: const EdgeInsets.only(right: 20),
                               child: Text(
                                 (index + 1).toString(),
-                                style: const TextStyle(color: Colors.white70, fontSize: 14, fontWeight: FontWeight.bold),
+                                style: const TextStyle(
+                                    color: Colors.white70,
+                                    fontSize: 14,
+                                    fontWeight: FontWeight.bold),
                               ),
                             ),
                             const Text(
@@ -35,8 +39,7 @@ class TeamsPage extends StatelessWidget {
                               style: TextStyle(
                                   fontSize: 16,
                                   fontWeight: FontWeight.bold,
-                                  color: Colors.white
-                              ),
+                                  color: Colors.white),
                             ),
                           ],
                         ),
@@ -47,14 +50,11 @@ class TeamsPage extends StatelessWidget {
                               '585.5',
                               style: TextStyle(
                                   color: Colors.white,
-                                  fontWeight: FontWeight.bold
-                              ),
+                                  fontWeight: FontWeight.bold),
                             ),
                             Text(
                               ' pts',
-                              style: TextStyle(
-                                  color: Colors.white70
-                              ),
+                              style: TextStyle(color: Colors.white70),
                             ),
                           ],
                         )

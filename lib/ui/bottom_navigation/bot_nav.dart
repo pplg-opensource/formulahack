@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:formulahack/ui/driver_standing/driver_list.dart';
 import 'package:formulahack/ui/history_page/tab_bar.dart';
+import 'package:formulahack/ui/home_page/home_page.dart';
 import 'package:formulahack/ui/team_page/team_page.dart';
 import 'package:formulahack/ui/schedule/tab_bar.dart';
 
@@ -17,11 +18,7 @@ class BottomNavbar extends StatefulWidget {
 class _BottomNavbarState extends State<BottomNavbar> {
   int currentindex = 0;
   final Screens = [
-    Center(
-      child: Text(
-        "home",
-      ),
-    ),
+    HomePage(),
     TabBarPage(),
     DriverStanding(),
     TeamPage(),
