@@ -115,7 +115,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white70),
               ),
               Container(
-                height: 125,
+                height: 158,
                 width: screenWidth,
                 child: _isLoad
                     ? ListView.builder(
@@ -148,7 +148,7 @@ class _HomePageState extends State<HomePage> {
                 margin: EdgeInsets.only(top: 16),
                 padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
                 height: 85,
-                width: 155,
+                width: 185,
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(7.5),
                   color: ColorValues.secondColor,

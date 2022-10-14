@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:formulahack/model/constructor_driver_model.dart';
+import 'package:formulahack/model/constructor_driver_result_model.dart';
 import 'package:formulahack/model/constructor_model.dart';
 import 'package:formulahack/model/driver_standing_model.dart';
 import 'package:formulahack/model/qualify_result_model.dart';
@@ -143,6 +144,26 @@ class ApiService {
       if (response.statusCode == 200) {
         ConstructorDriverModel model =
             ConstructorDriverModel.fromJson(jsonDecode(response.body));
+        return model;
+      } else {
+        throw Exception("Failed to fetch data from API");
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+  }
+
+  Future getTeamDriverResult(String constructor) async {
+    String endPoint = "current/constructors/$constructor/results.json";
+    final url = "$baseUrl$endPoint";
+
+    try {
+      final response = await http.get(Uri.parse(url));
+
+      print('status code : ${response.statusCode}');
+      if (response.statusCode == 200) {
+        ConstructorDriverResultModel model =
+            ConstructorDriverResultModel.fromJson(jsonDecode(response.body));
         return model;
       } else {
         throw Exception("Failed to fetch data from API");

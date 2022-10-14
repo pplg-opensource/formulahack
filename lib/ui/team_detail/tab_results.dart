@@ -1,59 +1,49 @@
 import 'package:flutter/material.dart';
 import 'package:formulahack/common/color_values.dart';
+import 'package:formulahack/model/constructor_driver_result_model.dart';
 
 class TabResults extends StatefulWidget {
-  const TabResults({super.key});
+  TabResults({super.key, required this.result});
+  RaceTable result;
 
   @override
   State<TabResults> createState() => _TabResultsState();
 }
 
 class _TabResultsState extends State<TabResults> {
-  String? drdValue;
-  final List<DropdownMenuItem<String>> _drItem = [
-    DropdownMenuItem(
-        child: Text("1", style: TextStyle(color: Colors.white)),
-        value: "drd 1"),
-    DropdownMenuItem(
-        child: Text("2", style: TextStyle(color: Colors.white)),
-        value: "drd 2"),
-  ];
+  RaceTable? _raceTable;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    _raceTable = widget.result;
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       child: Padding(
-        padding: EdgeInsets.symmetric(vertical: 9, horizontal: 26),
+        padding: EdgeInsets.symmetric(vertical: 18, horizontal: 26),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            DropdownButtonHideUnderline(
-              child: DropdownButton(
-                value: drdValue,
-                style: TextStyle(
-                  fontSize: 12,
+            Text(
+              "Season ${_raceTable!.season}",
+              style: const TextStyle(
                   color: Colors.white,
-                  fontWeight: FontWeight.w600,
-                ),
-                hint: Text(
-                  "Current Season",
-                  style: TextStyle(color: Colors.white),
-                ),
-                items: _drItem,
-                onChanged: (String? value) {
-                  setState(() {
-                    drdValue = value;
-                  });
-                },
-              ),
+                  fontWeight: FontWeight.bold,
+                  fontSize: 13),
             ),
-            // SizedBox(height: 6),
+            SizedBox(height: 14),
             ListView.builder(
-                itemCount: 5,
+                itemCount: _raceTable!.races!.length,
                 padding: EdgeInsets.zero,
                 shrinkWrap: true,
                 physics: NeverScrollableScrollPhysics(),
                 itemBuilder: (context, index) {
+                  var round = _raceTable!.races![index];
+
                   return Padding(
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     child: Column(
@@ -68,7 +58,7 @@ class _TabResultsState extends State<TabResults> {
                         ),
                         SizedBox(height: 6),
                         Text(
-                          "Bahrain",
+                          round.circuit!.location!.country!,
                           style: const TextStyle(
                             color: Colors.white,
                             fontWeight: FontWeight.w600,
@@ -78,10 +68,22 @@ class _TabResultsState extends State<TabResults> {
                         SizedBox(height: 7),
 
                         // driver 1
-                        _driverStats("Charles", "Leclerc", "1", "26"),
+                        _driverStats(
+                          round.results![0].driver!.givenName!,
+                          round.results![0].driver!.familyName!,
+                          round.results![0].position!,
+                          round.results![0].points!,
+                          round.results![0].status!,
+                        ),
                         SizedBox(height: 7),
                         // driver 2
-                        _driverStats("Carlos", "Sainz", "2", "18")
+                        _driverStats(
+                          round.results![1].driver!.givenName!,
+                          round.results![1].driver!.familyName!,
+                          round.results![1].position!,
+                          round.results![1].points!,
+                          round.results![1].status!,
+                        )
                       ],
                     ),
                   );
@@ -92,8 +94,10 @@ class _TabResultsState extends State<TabResults> {
     );
   }
 
-  Widget _driverStats(
-      String frontName, String backName, String position, String pts) {
+  Widget _driverStats(String frontName, String backName, String position,
+      String pts, String status) {
+    bool ptsCondition = int.parse(pts) != 0;
+
     return Row(
       children: [
         Text.rich(
@@ -119,13 +123,23 @@ class _TabResultsState extends State<TabResults> {
                     style: TextStyle(fontWeight: FontWeight.w600)),
               ], style: TextStyle(color: Colors.white, fontSize: 13)),
             ),
-            Text.rich(
-              TextSpan(children: [
-                TextSpan(
-                    text: pts, style: TextStyle(fontWeight: FontWeight.w600)),
-                TextSpan(text: " pts"),
-              ], style: TextStyle(color: Colors.white, fontSize: 13)),
-            ),
+            ptsCondition
+                ? Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                            text: pts,
+                            style: TextStyle(fontWeight: FontWeight.w600)),
+                        TextSpan(text: " pts"),
+                      ],
+                      style: TextStyle(color: Colors.white, fontSize: 13),
+                    ),
+                  )
+                : Text(status,
+                    style: TextStyle(
+                        fontWeight: FontWeight.w600,
+                        color: Colors.white,
+                        fontSize: 13)),
           ],
         )
       ],

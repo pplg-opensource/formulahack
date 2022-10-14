@@ -70,7 +70,11 @@ class _TeamCardState extends State<TeamCard> {
         Navigator.push(
             context,
             MaterialPageRoute(
-                builder: ((context) => const TeamDetailTabbar())));
+                builder: ((context) => TeamDetailTabbar(
+                      constructorId: widget.teamId,
+                      constructorName: widget.teamName,
+                      allDriver: driverName(),
+                    ))));
       },
       child: Padding(
         padding: const EdgeInsets.symmetric(vertical: 10, horizontal: 15),
