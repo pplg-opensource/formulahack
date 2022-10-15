@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formulahack/ui/detail_driver/tab_bar.dart';
 
-import '../../common/color_values.dart';
+import '../../../common/color_values.dart';
 
 class DriverStanding_Card extends StatefulWidget {
   int number;
