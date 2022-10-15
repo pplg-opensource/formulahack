@@ -1,7 +1,23 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 
-class DriverPage extends StatelessWidget {
+class DriverPage extends StatefulWidget {
   const DriverPage({Key? key}) : super(key: key);
+
+  @override
+  State<DriverPage> createState() => _DriverPageState();
+}
+
+class _DriverPageState extends State<DriverPage> {
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+
 
   @override
   Widget build(BuildContext context) {

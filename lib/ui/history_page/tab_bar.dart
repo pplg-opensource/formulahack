@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:formulahack/ui/history_page/driver.dart';
-import 'package:formulahack/ui/history_page/schedule.dart';
-import 'package:formulahack/ui/history_page/teams.dart';
+import 'package:formulahack/ui/detail_history/driver.dart';
+import 'package:formulahack/ui/detail_history/schedule.dart';
+import 'package:formulahack/ui/detail_history/teams.dart';
 
 import '../../common/color_values.dart';
 

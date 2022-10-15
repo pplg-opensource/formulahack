@@ -89,7 +89,7 @@ class ApiService {
     }
   }
 
-  Future getSprintResult(String round) async {
+  Future  getSprintResult(String round) async {
     String endPoint = "2022/$round/sprint.json";
     final url = "$baseUrl$endPoint";
 
