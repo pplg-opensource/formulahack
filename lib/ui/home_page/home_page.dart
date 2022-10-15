@@ -127,7 +127,7 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white70),
               ),
               Container(
-                height: 140,
+                height: 158,
                 width: screenWidth,
                 child: _isLoaded
                     ? ListView.builder(
