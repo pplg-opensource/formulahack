@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:formulahack/common/color_values.dart';
 import 'package:formulahack/ui/detail_race/detail_race.dart';
-
-import '../../common/color_values.dart';
 
 class NextRaceCard extends StatelessWidget {
   String flag, round, country, circuit, date;

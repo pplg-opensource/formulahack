@@ -2,10 +2,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:formulahack/common/color_values.dart';
 import 'package:formulahack/ui/driver_standing/driver_list.dart';
-import 'package:formulahack/ui/home_page/driverStanding_card.dart';
-import 'package:formulahack/ui/home_page/nextRace_card.dart';
+import 'package:formulahack/ui/widgets/home_widget/driverStanding_card.dart';
+import 'package:formulahack/ui/widgets/home_widget/loadingDriverSanding.dart';
+
+import 'package:formulahack/ui/home_page/setting.dart';
 import 'package:formulahack/ui/schedule/tab_bar.dart';
 import 'package:formulahack/ui/team_page/team_page.dart';
+import 'package:formulahack/ui/widgets/home_widget/loadingNextRace_Card.dart';
+import 'package:formulahack/ui/widgets/home_widget/nextRace_card.dart';
+import 'package:formulahack/ui/widgets/shimmer_widget.dart';
 import 'package:intl/intl.dart';
 
 import '../../model/constructor_model.dart';
@@ -18,7 +23,7 @@ import '../widgets/loading_team_card.dart';
 import '../widgets/team_card.dart';
 
 class HomePage extends StatefulWidget {
-  HomePage({Key? key}) : super(key: key);
+  const HomePage({Key? key}) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -29,7 +34,6 @@ class _HomePageState extends State<HomePage> {
 
   ScheduleModel? _model;
   List<Races> _races = [];
-  bool _isLoaded = true;
   ConstructorStandingModel? _standingModel;
   List<ConstructorStandings> _listTeam = [];
   bool isLoading = false;
@@ -43,11 +47,6 @@ class _HomePageState extends State<HomePage> {
         .mRData!.standingsTable!.standingsLists![0].driverStandings!
         .toList();
 
-    if (mounted) {
-      setState(() {
-        _isLoad = true;
-      });
-    }
     _standingModel = await ApiService().getTeam();
     _listTeam = _standingModel!
         .mRData!.standingsTable!.standingsLists![0].constructorStandings!
@@ -65,7 +64,7 @@ class _HomePageState extends State<HomePage> {
 
     if (mounted) {
       setState(() {
-        _isLoaded = true;
+        _isLoad = true;
       });
     }
   }
@@ -105,11 +104,23 @@ class _HomePageState extends State<HomePage> {
                     ],
                   ),
                   Spacer(),
-                  Container(
-                    margin: EdgeInsets.only(right: 20),
-                    child: CircleAvatar(
-                      backgroundColor: ColorValues.primaryColor,
-                      child: Icon(Icons.person),
+                  GestureDetector(
+                    onTap: (() {
+                      Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => SettingPage(),
+                          ));
+                    }),
+                    child: Container(
+                      margin: EdgeInsets.only(right: 20),
+                      child: CircleAvatar(
+                        backgroundColor: ColorValues.primaryColor,
+                        child: Icon(
+                          Icons.person,
+                          color: Colors.white,
+                        ),
+                      ),
                     ),
                   )
                 ],
@@ -127,9 +138,9 @@ class _HomePageState extends State<HomePage> {
                 style: TextStyle(color: Colors.white70),
               ),
               Container(
-                height: 158,
+                height: 140,
                 width: screenWidth,
-                child: _isLoaded
+                child: _isLoad
                     ? ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: _driver.length,
@@ -146,7 +157,13 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       )
-                    : Center(child: CircularProgressIndicator()),
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 5,
+                        itemBuilder: (BuildContext context, int index) {
+                          return const LoadingDriverStanding();
+                        },
+                      ),
               ),
               SizedBox(
                 height: 16,
@@ -177,7 +194,13 @@ class _HomePageState extends State<HomePage> {
                           );
                         },
                       )
-                    : Center(child: CircularProgressIndicator()),
+                    : ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: 5,
+                        itemBuilder: (BuildContext context, int index) {
+                          return const LoadingNextRace();
+                        },
+                      ),
               ),
               SizedBox(
                 height: 16,
@@ -213,7 +236,9 @@ class _HomePageState extends State<HomePage> {
                         },
                       )
                     : ListView.builder(
-                        itemCount: 10,
+                        physics: NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.zero,
+                        itemCount: 3,
                         itemBuilder: (BuildContext context, int index) {
                           return const LoadingDriverCard();
                         },
@@ -263,7 +288,7 @@ class _HomePageState extends State<HomePage> {
                         },
                       )
                     : ListView.builder(
-                        itemCount: 10,
+                        itemCount: 3,
                         itemBuilder: (context, index) {
                           return const LoadingTeamCard();
                         },
