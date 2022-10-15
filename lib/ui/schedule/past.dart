@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:formulahack/model/schedule_model.dart';
 import 'package:formulahack/service/api_service.dart';
+import 'package:formulahack/ui/widgets/loading_schedule_card.dart';
 import 'package:formulahack/ui/widgets/schedule_card.dart';
 import 'package:intl/intl.dart';
 
@@ -41,26 +42,30 @@ class _PastPageState extends State<PastPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: _isLoaded
-          ? ListView.builder(
-              itemCount: _races.length,
-              itemBuilder: (_, index) {
-                var data = _races[index];
-                final date = DateTime.parse(data.date!);
+        body: _isLoaded
+            ? ListView.builder(
+                itemCount: _races.length,
+                itemBuilder: (_, index) {
+                  var data = _races[index];
+                  final date = DateTime.parse(data.date!);
 
-                return ScheduleCard(
-                  flag: data.circuit!.location!.country!,
-                  round: data.round!,
-                  country: data.circuit!.location!.country!,
-                  circuit: data.circuit!.circuitName!,
-                  date: DateFormat('dd MMM yyyy').format(date),
-                  isPast: true,
-                );
-              },
-            )
-          : const Center(
-              child: CircularProgressIndicator(),
-            ),
-    );
+                  return ScheduleCard(
+                    flag: data.circuit!.location!.country!,
+                    round: data.round!,
+                    country: data.circuit!.location!.country!,
+                    circuit: data.circuit!.circuitName!,
+                    date: DateFormat('dd MMM yyyy').format(date),
+                    isPast: true,
+                  );
+                },
+              )
+            : ListView.builder(
+                itemCount: 10,
+                itemBuilder: (_, index) {
+                  return const LoadingScheduleCard(
+                    isPast: true,
+                  );
+                },
+              ));
   }
 }
