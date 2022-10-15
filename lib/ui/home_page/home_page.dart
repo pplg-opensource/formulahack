@@ -1,11 +1,19 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
 import 'package:formulahack/common/color_values.dart';
+import 'package:formulahack/ui/driver_standing/driver_list.dart';
 import 'package:formulahack/ui/home_page/driverStanding_card.dart';
+import 'package:formulahack/ui/home_page/nextRace_card.dart';
+import 'package:formulahack/ui/schedule/tab_bar.dart';
+import 'package:formulahack/ui/team_page/team_page.dart';
+import 'package:intl/intl.dart';
 
 import '../../model/constructor_model.dart';
 import '../../model/driver_standing_model.dart';
+import '../../model/schedule_model.dart';
 import '../../service/api_service.dart';
+import '../widgets/driver_widget/driver_card.dart';
+import '../widgets/driver_widget/loading_driver_card.dart';
 import '../widgets/loading_team_card.dart';
 import '../widgets/team_card.dart';
 
@@ -18,6 +26,13 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   bool _isLoad = false;
+
+  ScheduleModel? _model;
+  List<Races> _races = [];
+  bool _isLoaded = true;
+  ConstructorStandingModel? _standingModel;
+  List<ConstructorStandings> _listTeam = [];
+  bool isLoading = false;
 
   DriverModel? _driverModel;
   List<DriverStandings> _driver = [];
@@ -40,23 +55,20 @@ class _HomePageState extends State<HomePage> {
     setState(() {
       isLoading = true;
     });
+
+    _model = await ApiService().getSchedule();
+    _races = _model!.mRData!.raceTable!.races!
+        .where((e) =>
+            int.parse(DateFormat('MMdd').format(DateTime.parse(e.date!))) >
+            int.parse(DateFormat('MMdd').format(DateTime.now())))
+        .toList();
+
+    if (mounted) {
+      setState(() {
+        _isLoaded = true;
+      });
+    }
   }
-
-  ConstructorStandingModel? _standingModel;
-  List<ConstructorStandings> _listTeam = [];
-
-  bool isLoading = false;
-
-  // Future getApi() async {
-  //   // Team Standing
-  //   _standingModel = await ApiService().getTeam();
-  //   _listTeam = _standingModel!
-  //       .mRData!.standingsTable!.standingsLists![0].constructorStandings!
-  //       .toList();
-  //   setState(() {
-  //     isLoading = true;
-  //   });
-  // }
 
   @override
   void initState() {
@@ -117,7 +129,7 @@ class _HomePageState extends State<HomePage> {
               Container(
                 height: 158,
                 width: screenWidth,
-                child: _isLoad
+                child: _isLoaded
                     ? ListView.builder(
                         scrollDirection: Axis.horizontal,
                         itemCount: _driver.length,
@@ -146,58 +158,26 @@ class _HomePageState extends State<HomePage> {
               ),
               Container(
                 margin: EdgeInsets.only(top: 16),
-                padding: EdgeInsets.fromLTRB(10, 5, 10, 0),
+                width: screenWidth,
                 height: 85,
-                width: 185,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(7.5),
-                  color: ColorValues.secondColor,
-                ),
-                child: Row(
-                  children: [
-                    Container(
-                      height: 50,
-                      child: Image(
-                          image: AssetImage("assets/countries/spain.png")),
-                    ),
-                    SizedBox(
-                      width: 16,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          "Round 6",
-                          style: TextStyle(
-                              color: ColorValues.primaryColor,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w500),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          "Spain",
-                          style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 14,
-                              fontWeight: FontWeight.w700),
-                        ),
-                        SizedBox(
-                          height: 4,
-                        ),
-                        Text(
-                          "20-22 MAY 2022",
-                          style: TextStyle(
-                              color: Colors.white70,
-                              fontSize: 10,
-                              fontWeight: FontWeight.w500),
-                        )
-                      ],
-                    )
-                  ],
-                ),
+                child: _isLoad
+                    ? ListView.builder(
+                        scrollDirection: Axis.horizontal,
+                        itemCount: _races.length,
+                        itemBuilder: (_, index) {
+                          var data = _races[index];
+                          final date = DateTime.parse(data.date!);
+
+                          return NextRaceCard(
+                            flag: data.circuit!.location!.country!,
+                            round: data.round!,
+                            country: data.circuit!.location!.country!,
+                            circuit: data.circuit!.circuitName!,
+                            date: DateFormat('dd MMM yyyy').format(date),
+                          );
+                        },
+                      )
+                    : Center(child: CircularProgressIndicator()),
               ),
               SizedBox(
                 height: 16,
@@ -211,223 +191,51 @@ class _HomePageState extends State<HomePage> {
                 height: 16,
               ),
               Container(
-                margin: EdgeInsets.fromLTRB(0, 6, 20, 6),
-                height: 45,
+                height: 170,
                 width: screenWidth,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 18,
-                          child: Text("1",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14)),
-                        ),
-                        Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 15),
-                            height: 45,
-                            width: 45,
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage("assets/drivers/sainz_front.png"),
-                              backgroundColor: ColorValues.secondColor,
-                            )),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Text("Charles ",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400)),
-                                Text("Ledrec",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            Text("Ferarri",
-                                style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300))
-                          ],
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          Text("612",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800)),
-                          Text(" pts",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400)),
-                        ],
+                child: _isLoad
+                    ? ListView.builder(
+                        padding: EdgeInsets.zero,
+                        physics: NeverScrollableScrollPhysics(),
+                        itemCount: 3,
+                        itemBuilder: (BuildContext context, int index) {
+                          return DriverCard(
+                            number: (index + 1),
+                            givenName:
+                                _driver[index].driver!.givenName.toString(),
+                            familyName:
+                                _driver[index].driver!.familyName.toString(),
+                            constName:
+                                _driver[index].constructors![0].name.toString(),
+                            point: _driver[index].points.toString(),
+                            nameId: _driver[index].driver!.driverId.toString(),
+                          );
+                        },
+                      )
+                    : ListView.builder(
+                        itemCount: 10,
+                        itemBuilder: (BuildContext context, int index) {
+                          return const LoadingDriverCard();
+                        },
                       ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 6, 20, 6),
-                height: 45,
-                width: screenWidth,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 18,
-                          child: Text("1",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14)),
-                        ),
-                        Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 15),
-                            height: 45,
-                            width: 45,
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage("assets/drivers/sainz_front.png"),
-                              backgroundColor: ColorValues.secondColor,
-                            )),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Text("Charles ",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400)),
-                                Text("Ledrec",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            Text("Ferarri",
-                                style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300))
-                          ],
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          Text("612",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800)),
-                          Text(" pts",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              Container(
-                margin: EdgeInsets.fromLTRB(0, 6, 20, 6),
-                height: 45,
-                width: screenWidth,
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Row(
-                      children: [
-                        Container(
-                          width: 18,
-                          child: Text("1",
-                              style:
-                                  TextStyle(color: Colors.white, fontSize: 14)),
-                        ),
-                        Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 15),
-                            height: 45,
-                            width: 45,
-                            child: CircleAvatar(
-                              backgroundImage:
-                                  AssetImage("assets/drivers/sainz_front.png"),
-                              backgroundColor: ColorValues.secondColor,
-                            )),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Row(
-                              children: [
-                                Text("Charles ",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w400)),
-                                Text("Ledrec",
-                                    style: TextStyle(
-                                        color: Colors.white,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.bold)),
-                              ],
-                            ),
-                            Text("Ferarri",
-                                style: TextStyle(
-                                    color: Colors.white70,
-                                    fontSize: 12,
-                                    fontWeight: FontWeight.w300))
-                          ],
-                        ),
-                      ],
-                    ),
-                    Container(
-                      margin: EdgeInsets.only(bottom: 8),
-                      child: Row(
-                        children: [
-                          Text("612",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w800)),
-                          Text(" pts",
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w400)),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
               ),
               SizedBox(
                 height: 8,
               ),
-              Text(
-                "See full standing",
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.white70),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => DriverStanding(),
+                      ));
+                },
+                child: Text(
+                  "See full standing",
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.white70),
+                ),
               ),
               SizedBox(
                 height: 16,
@@ -442,6 +250,7 @@ class _HomePageState extends State<HomePage> {
                 width: screenWidth,
                 child: isLoading
                     ? ListView.builder(
+                        padding: EdgeInsets.zero,
                         physics: NeverScrollableScrollPhysics(),
                         itemCount: 3,
                         itemBuilder: (context, index) {
@@ -460,11 +269,20 @@ class _HomePageState extends State<HomePage> {
                         },
                       ),
               ),
-              Text(
-                "See full standing",
-                style: TextStyle(
-                    decoration: TextDecoration.underline,
-                    color: Colors.white70),
+              GestureDetector(
+                onTap: () {
+                  Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => TeamPage(),
+                      ));
+                },
+                child: Text(
+                  "See full standing",
+                  style: TextStyle(
+                      decoration: TextDecoration.underline,
+                      color: Colors.white70),
+                ),
               ),
               SizedBox(
                 height: 16,
